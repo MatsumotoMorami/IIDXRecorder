@@ -1,0 +1,13 @@
+*.dll
+*.pdb
+*.lib
+*.exe
+*.obj
+*.o
+*.log
+.zig-cache/
+zig-out/
+build/
+recordings/
+*-test-*/
+auto-export-test/

@@ -1,3 +1,4 @@
+#include "game_build.h"
 // Names are captured at the FIRST start, never from the result/menu state.
 namespace RecordingName {
 struct Metadata {SYSTEMTIME started{};int mode=-1;std::wstring detail;};
@@ -21,14 +22,14 @@ static bool Read(const void* address,void* dest,size_t bytes){SIZE_T got=0;retur
 static Metadata Capture(BYTE* base,bool metadataSupported){
     Metadata m;GetLocalTime(&m.started);
     if(!base)return m;
-    Read(base+0xac85170,&m.mode,sizeof(m.mode));
+    Read(base+GameBuild::R(0xac85170),&m.mode,sizeof(m.mode));
     if(!metadataSupported)return m;
     if(m.mode==3){
         int grade=-1,style=-1;
-        if(Read(base+0xaa60e10,&grade,4)&&Read(base+0xac85174,&style,4))m.detail=Grade(grade,style==0?0:style>0?1:-1);
+        if(Read(base+GameBuild::R(0xaa60e10),&grade,4)&&Read(base+GameBuild::R(0xac85174),&style,4))m.detail=Grade(grade,style==0?0:style>0?1:-1);
     }else if(m.mode==0||m.mode==5||m.mode==6){
         BYTE* song=nullptr;char title[256]={};
-        if(Read(base+0xac851a0,&song,sizeof(song))&&song&&Read(song+0x100,title,sizeof(title))){
+        if(Read(base+GameBuild::R(0xac851a0),&song,sizeof(song))&&song&&Read(song+0x100,title,sizeof(title))){
             size_t n=0;while(n<sizeof(title)&&title[n])++n;
             if(n&&n<sizeof(title)){
                 // Native music database strings use Windows Shift-JIS (CP932).

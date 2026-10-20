@@ -1,0 +1,126 @@
+#pragma once
+// Verified native recorder layouts; unknown builds fail closed.
+namespace GameBuild {
+static bool updated=false;
+static bool latest=false;
+static bool current=false;
+static DWORD R(DWORD original,bool useUpdated=updated){
+    if(current){switch(original){
+    case 0x4624b0:return 0x461530;
+    case 0x4626b0:return 0x461730;
+    case 0x839450:return 0x8416f0;
+    case 0x839f60:return 0x842250;
+    case 0x88b6b0:return 0x896e40;
+    case 0x8a91c0:return 0x8b5360;
+    case 0x8eb876:return 0x8f937c;
+    case 0x8eca61:return 0x8fa7c1;
+    case 0x90f220:return 0x91a2c0;
+    case 0x924fe0:return 0x92fc80;
+    case 0x924ff0:return 0x92fc90;
+    case 0x925000:return 0x92fca0;
+    case 0xa67740:return 0xa7c130;
+    case 0xa677b0:return 0xa7c1a0;
+    case 0xa67920:return 0xa7c310;
+    case 0xa67930:return 0xa7c320;
+    case 0xa67b30:return 0xa7c520;
+    case 0xa67e50:return 0xa7c840;
+    case 0xa67ec0:return 0xa7c8b0;
+    case 0xa67ef0:return 0xa7c8e0;
+    case 0xa68230:return 0xa7cc20;
+    case 0xa68840:return 0xa7d240;
+    case 0xd3c7b0:return 0xd45ad8;
+    case 0xd437d0:return 0xd4c260;
+    case 0xd69d48:return 0xd73238;
+    case 0xd70b68:return 0xd7ce08;
+    case 0xd70c28:return 0xd7ba70;
+    case 0xd736d8:return 0xd7b670;
+    case 0xd969e0:return 0xda1f60;
+    case 0xe376d0:return 0xe3f760;
+    case 0xaa60e10:return 0xb3e82a0;
+    case 0xac85170:return 0xb60b3a0;
+    case 0xac85174:return 0xb60b3a4;
+    case 0xac851a0:return 0xb60b3d0;
+    case 0xb247cb8:return 0xbcce4f0;
+    default:return original;
+    }}
+    if(latest){switch(original){
+    case 0x4624b0:return 0x472fe0;
+    case 0x4626b0:return 0x4731e0;
+    case 0x839450:return 0x853b70;
+    case 0x839f60:return 0x854740;
+    case 0x839fc3:return 0x8547b2;
+    case 0x88b6b0:return 0x8a8dd0;
+    case 0x8a91c0:return 0x8c7580;
+    case 0x8eb876:return 0x90d23a;
+    case 0x8eca61:return 0x90e5f1;
+    case 0x90f220:return 0x932310;
+    case 0x924fe0:return 0x9480e0;
+    case 0x924ff0:return 0x9480f0;
+    case 0x925000:return 0x948100;
+    case 0xa67740:return 0xa8c6f0;
+    case 0xa677b0:return 0xa8c760;
+    case 0xa67920:return 0xa8c8d0;
+    case 0xa67930:return 0xa8c8e0;
+    case 0xa67b30:return 0xa8cae0;
+    case 0xa67e50:return 0xa8ce00;
+    case 0xa67ec0:return 0xa8ce70;
+    case 0xa67ef0:return 0xa8cea0;
+    case 0xa68230:return 0xa8d1e0;
+    case 0xa68840:return 0xa8d7f0;
+    case 0xd3c7b0:return 0xd74a40;
+    case 0xd437d0:return 0xd7c5d0;
+    case 0xd69d48:return 0xda3088;
+    case 0xd70b68:return 0xda9d58;
+    case 0xd70c28:return 0xda9c98;
+    case 0xd736d8:return 0xdac388;
+    case 0xd969e0:return 0xdd0480;
+    case 0xe376d0:return 0xe736d8;
+    case 0xaa60e10:return 0xaaafe20;
+    case 0xac85170:return 0xacd59a0;
+    case 0xac85174:return 0xacd59a4;
+    case 0xac851a0:return 0xacd59d0;
+    case 0xb247cb8:return 0xb298518;
+    default:return original;
+    }}
+    if(!useUpdated)return original;
+    switch(original){
+    case 0x4624b0:return 0x463a70;
+    case 0x4626b0:return 0x463c70;
+    case 0x839450:return 0x83c190;
+    case 0x839f60:return 0x83cca0;
+    case 0x839fc3:return 0x83cd03;
+    case 0x88b6b0:return 0x88e7b0;
+    case 0x8a91c0:return 0x8ac2c0;
+    case 0x8eb876:return 0x8eea06;
+    case 0x8eca61:return 0x8efbf1;
+    case 0x90f220:return 0x912410;
+    case 0x924fe0:return 0x9281e0;
+    case 0x924ff0:return 0x9281f0;
+    case 0x925000:return 0x928200;
+    case 0xa67740:return 0xa6c620;
+    case 0xa677b0:return 0xa6c690;
+    case 0xa67920:return 0xa6c800;
+    case 0xa67930:return 0xa6c810;
+    case 0xa67b30:return 0xa6ca10;
+    case 0xa67e50:return 0xa6cd30;
+    case 0xa67ec0:return 0xa6cda0;
+    case 0xa67ef0:return 0xa6cdd0;
+    case 0xa68230:return 0xa6d110;
+    case 0xa68840:return 0xa6d720;
+    case 0xd3c7b0:return 0xd42e50;
+    case 0xd437d0:return 0xd49e70;
+    case 0xd69d48:return 0xd703e8;
+    case 0xd70b68:return 0xd777d8;
+    case 0xd70c28:return 0xd77898;
+    case 0xd736d8:return 0xd79058;
+    case 0xd969e0:return 0xd9d470;
+    case 0xe376d0:return 0xe3e6c0;
+    case 0xaa60e10:return 0xaa694e0;
+    case 0xac85170:return 0xac8d840;
+    case 0xac85174:return 0xac8d844;
+    case 0xac851a0:return 0xac8d870;
+    case 0xb247cb8:return 0xb250388;
+    default:return original;
+    }
+}
+}

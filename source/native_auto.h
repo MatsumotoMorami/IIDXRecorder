@@ -163,15 +163,25 @@ static const Fingerprint fingerprintsLatest[]={
     {0xa8c760,"\x48\x8b\xc4\x55\x48\x8d\x68\xd8",8},
     {0x4731e0,"\x40\x55\x56\x57\x41\x56\x41\x57\x48\x83\xec\x50\x48\xc7\x44\x24",16},
 };
+static const Fingerprint fingerprintsOctober[]={
+{0x8f937c,"\xe8\xbf\x60\xf6\xff\x84\xc0",7},
+{0x8fa7c1,"\xe8\x7a\x4c\xf6\xff\x84\xc0",7},
+{0xa7c8e0,"\x40\x55\x56\x57\x41\x56\x41\x57\x48\x8d\x6c\x24\xb0\x48\x81\xec",16},
+{0x92fca0,"\x8b\x05\xfa\xa5\xcd\x0a\xc3",7},
+{0xa7c320,"\x48\x8b\xc4\x57\x48\x81\xec",7},
+{0xa7c1a0,"\x48\x8b\xc4\x55\x48\x8d\x68\xd8",8},
+{0x461730,"\x40\x55\x56\x57\x41\x56\x41\x57\x48\x83\xec\x50\x48\xc7\x44\x24",16},
+};
 static bool Install(HMODULE module){
     if(!GetPrivateProfileIntW(L"Native",L"AutoRecord",1,ini.c_str())){Log(L"Automatic native recording is disabled in INI");return false;}
     auto b=(BYTE*)module;auto dos=(IMAGE_DOS_HEADER*)b;
     auto nt=(IMAGE_NT_HEADERS64*)(b+dos->e_lfanew);
-    GameBuild::current=nt->FileHeader.TimeDateStamp==0x6aa23d57&&nt->OptionalHeader.SizeOfImage==0xc5ff000&&nt->OptionalHeader.SizeOfCode==0xc64200&&nt->OptionalHeader.AddressOfEntryPoint==0xb02b3c;
+    GameBuild::october=nt->FileHeader.TimeDateStamp==0x6ac5f8ce&&nt->OptionalHeader.SizeOfImage==0xc5fe000&&nt->OptionalHeader.SizeOfCode==0xc64000&&nt->OptionalHeader.AddressOfEntryPoint==0xb0294c;
+    GameBuild::current=GameBuild::october || nt->FileHeader.TimeDateStamp==0x6aa23d57&&nt->OptionalHeader.SizeOfImage==0xc5ff000&&nt->OptionalHeader.SizeOfCode==0xc64200&&nt->OptionalHeader.AddressOfEntryPoint==0xb02b3c;
     GameBuild::latest=nt->FileHeader.TimeDateStamp==0x6a8bafd1&&nt->OptionalHeader.SizeOfImage==0xbb93000;
     GameBuild::updated=nt->FileHeader.TimeDateStamp==0x69ddf5f8&&nt->OptionalHeader.SizeOfImage==0xbb47000;
     if(!GameBuild::current&&!GameBuild::latest&&!GameBuild::updated&&(nt->FileHeader.TimeDateStamp!=0x69c347cc||nt->OptionalHeader.SizeOfImage!=0xbb3e000)){Log(L"AUTO disabled: unsupported game build (no native code changed)",E_NOTIMPL);return false;}
-    const Fingerprint* checks=GameBuild::current?fingerprintsCurrent:(GameBuild::latest?fingerprintsLatest:(GameBuild::updated?fingerprintsNew:fingerprints));
+    const Fingerprint* checks=GameBuild::october?fingerprintsOctober:(GameBuild::current?fingerprintsCurrent:(GameBuild::latest?fingerprintsLatest:(GameBuild::updated?fingerprintsNew:fingerprints)));
     for(size_t i=0;i<sizeof(fingerprints)/sizeof(fingerprints[0]);++i){const auto& f=checks[i];if(memcmp(b+GameBuild::R(f.rva),f.data,f.size)){Log(L"AUTO disabled: instruction fingerprint mismatch (no native code changed)",E_FAIL);return false;}}
     const DWORD expected[]={0xa67ef0,0xa67e50,0xa67930,0xa67920,0xa677b0,0xa68840,0xa67b30,0xa67ec0,0xa68230,0xa67740};
     auto vt=(void**)(b+GameBuild::R(0xd969e0));
@@ -200,7 +210,9 @@ static bool Install(HMODULE module){
     nativeAutoActive=true;
     // Verify the small native readers and Dan-name call site before interpreting
     // their data. A mismatch omits detail instead of guessing or calling game code.
-    if(GameBuild::current){
+    if(GameBuild::october){
+    metadataSupported=!memcmp(base+GameBuild::Oct(0x92fc90),"\x48\x8b\x05\x39\xa6\xcd\x0a\xc3",8) && !memcmp(base+GameBuild::Oct(0x92fc80),"\x8b\x05\x1e\xa6\xcd\x0a\xc3",7) && !memcmp(base+GameBuild::Oct(0x842298),"\x8b\x15\x42\x51\xba\x0a",6);
+    }else if(GameBuild::current){
     metadataSupported=!memcmp(base+GameBuild::R(0x924ff0),"\x48\x8b\x05\x39\xb7\xcd\x0a\xc3",8)
         &&!memcmp(base+GameBuild::R(0x924fe0),"\x8b\x05\x1e\xb7\xcd\x0a\xc3",7)
         &&!memcmp(base+0x842298,"\x8b\x15\x02\x60\xba\x0a",6);
